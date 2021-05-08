@@ -63,24 +63,24 @@
 # #########################
 #
 #
-# # terminator = pd.read_csv('movies.csv', error_bad_lines=0)
+# # terminator = pd.read_csv('terminator2.csv', error_bad_lines=0)
 # # print(terminator)
 # # for now this is how accurate this will be:
 # # reading text from a text file: help from this: https://stackoverflow.com/questions/8369219/how-to-read-a-text-file-into-a-string-variable-and-strip-newlines
 #
 # # if the file is empty run the one with the header
 # # one else run the one that only appends movie data
-# with open('up.csv', 'r') as f:
+# with open('csv/saw.csv', 'r') as f:
 #     columns = defaultdict(list)
 #     # reading the csv content
 #     lines = f.read().replace('\n', '')
 #
 #     # getting the title of the film
-#     title = ["Terminator 2: Judgement Day", "Iron Man", "Up"]
+#     title = ["Terminator 2: Judgement Day", "Iron Man", "Up", "Interstellar", "Por mis pistolas", "Saw"]
 #     # Doing a rudimentary sentiment analysis
 #     sia = SentimentIntensityAnalyzer()
 #     dictionary_output = sia.polarity_scores(lines)
-#     dictionary_output['title'] = title[2]
+#     dictionary_output['title'] = title[5]
 #
 #     # print(dictionary_output)
 #     with open('movie_data.csv', 'a') as output_csv:
