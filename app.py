@@ -5,59 +5,88 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import numpy as np
-from dash.dependencies import Output, Input
+from dash.dependencies import Output, Input, State
 from sentiment import *
 import plotly.express as px
 import plotly.graph_objects as go
+from dash.exceptions import PreventUpdate
 
+# Getting the style.css for formatting the html elements from the assets directory:
+external_stylesheets = [
+    {
+        "href": "https://fonts.googleapis.com/css2?"
+                "family=Lato:wght@400;700&display=swap",
+        "rel": "stylesheet",
+    },
+]
 # Get the data from the new csv files after the analysis
 data = pd.read_csv("movie_data.csv")
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)  # creating a dash object
 
-app.title = "Virtual Interface Bank of Emotions"
+app.title = "Virtual Interface Bank of Emotions"  # the title of the application
 
+# The allowed input tupes are set by this tupple
 ALLOWED_TYPES = (
     "text",
 )
-app.layout = html.Div([
-    html.Div([
-        html.H1(children="Vibe", ),
-        html.P(
-            children="The application where the atmosphere of a movie as communicated to and felt by others can be measured. ",
-        ),
-        dcc.Dropdown(
-            id='my_dropdown',
-            options=[
-                {'value': sent, 'label': sent} for sent in
-                ["Terminator 2: Judgement Day", "Iron Man", "Up", "Interstellar", "Por mis pistolas", "Saw"]],
-            value="Terminator 2: Judgement Day",
-            multi=False,
-            clearable=False,
-            style={"width": "50%"},
-        ),
-    ]),
 
-    # The following code for the text input for the search query came from Dash source docs: https://dash.plotly.com/dash-core-components/input
+app.layout = html.Div(
 
-    html.Div([
-                 dcc.Input(
-                     id="input_{}".format(_),
-                     type=_,
-                     placeholder="Input type {}".format(_),
-                     className="Input-header"
-                 )
-                 for _ in ALLOWED_TYPES
-             ] + [html.Div(id="out-all-types")]
+    children=[
 
-             ),
+        html.Div([
 
-    html.Div([
-        dcc.Graph(
-            id="the_graph"
-        )
-    ]),
+            html.H1(children="Vibe"),
+            html.P(
+                children="The application where the atmosphere of a movie as communicated to and felt by others can be measured. ",
+            ),
 
-])
+        ], className="header-title"),
+
+        # The following code for the text input for the search query came from Dash source docs: https://dash.plotly.com/dash-core-components/input
+        # This is going to need a callback function to make the new pie charts from Wikipedia text
+        html.Div(
+            children=[
+                html.H2(
+                    children="Enter a movie title:"
+                ),
+                dcc.Input(
+                    id="my-input-movie",
+                    type="text",
+                    placeholder="Enter Movie",
+                    className="first-input",
+                    required=True
+                ),
+                html.Button('Submit', id="submit_movie_name", n_clicks=0, className="button-input"),
+                html.Div(id="my-output-movie")
+            ],
+
+            className="Input-header-div"),
+
+        html.Div([
+            dcc.Graph(
+                id="the_graph"
+            )
+        ]),
+
+        html.Div(
+            children=[
+                dcc.Dropdown(
+                    id='my_dropdown',
+                    options=[
+                        {'value': sent, 'label': sent} for sent in
+                        ["Terminator 2: Judgement Day", "Iron Man", "Up", "Interstellar", "Por mis pistolas",
+                         "Saw"]],
+                    value="Terminator 2: Judgement Day",
+                    multi=False,
+                    clearable=False,
+                    style={"width": "50%"},
+                    className="dropdown-menu"
+                ),
+
+            ], className="dropdown-menu"),
+
+    ])
 
 
 @app.callback(
@@ -86,28 +115,29 @@ def update_graph(values):
 
         print(values_from_movie)
 
-    # labels = ['', 'Hydrogen', 'Carbon_Dioxide', 'Nitrogen']
-    # values = [4500, 2500, 1053, 500]
-
-    # print(type(list(neg)), type(title), type(labels))
-
     # Use `hole` to create a donut-like pie chart and giving them the right values based on the movie
     fig = go.Figure(data=[go.Pie(labels=labels, values=values_from_movie, hole=.3)])
-
     return fig
 
 
-# This callback is for the inputs: this callback comes from the source code for Dash Input: https://dash.plotly.com/dash-core-components/input
+# Making a callback to get the input from the Input field
+
+
 
 @app.callback(
-    Output("out-all-types", "children"),
-    [Input("input_{}".format(_), "value") for _ in ALLOWED_TYPES],
+    [Output('my-output-movie', "children")],
+    [Input('submit_movie_name', 'n_clicks')],
+    [State('my-input-movie', 'value')]
 )
-def cb_render(*vals):
-    return " | ".join((str(val) for val in vals if val))
+def make_movie_request(n_clicks, movie_name):
+    list_movie = []
+    if movie_name is None:
+        print("It's empty")
+        raise PreventUpdate
 
-
-
+    print(movie_name, n_clicks)
+    list_movie.append(movie_name.lower())
+    return list_movie
 
 
 if __name__ == '__main__':

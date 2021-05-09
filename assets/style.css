@@ -1,0 +1,53 @@
+/* A lot of this is thanks to: https://www.w3schools.com/css specially the hover functionality */
+/*The dropdown menu under the pie charts.*/
+.dropdown-menu{
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+
+}
+
+
+/* The input header above the Input field. */
+.Input-header-div{
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+
+}
+
+
+/* The input box itself. */
+.first-input{
+    padding: 15px 32px;
+    font-weight: bold;
+    font-size: large;
+}
+
+/* The header title attributes. */
+.header-title{
+    color: black;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+
+/* The button for the input. */
+.button-input{
+    color: dodgerblue;
+    text-align: center;
+    padding: 15px 32px;
+    font-weight: bold;
+}
+
+
+
+/* The hover functionality for the submit button. */
+.button-input:hover{
+    background-color: #11557C;
+}
