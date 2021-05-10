@@ -1,6 +1,7 @@
 # The outline for this code is from: https://realpython.com/python-dash/
 
 import dash
+import flask
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
@@ -20,8 +21,11 @@ external_stylesheets = [
 # Get the data from the new csv files after the analysis
 movie_data = os.path.join('movie_data.csv')
 data = pd.read_csv(movie_data)
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)  # creating a dash object
-server = app.server
+
+server = flask.Flask(__name__)
+
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, server=server)  # creating a dash object
+
 app.title = "Virtual Interface Bank of Emotions"  # the title of the application
 
 # The allowed input tupes are set by this tupple
