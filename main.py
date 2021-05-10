@@ -4,12 +4,10 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-import numpy as np
 from dash.dependencies import Output, Input, State
-from sentiment import *
-import plotly.express as px
 import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
+import os
 
 # Getting the style.css for formatting the html elements from the assets directory:
 external_stylesheets = [
@@ -20,7 +18,8 @@ external_stylesheets = [
     },
 ]
 # Get the data from the new csv files after the analysis
-data = pd.read_csv("movie_data.csv")
+movie_data = os.path.join('movie_data.csv')
+data = pd.read_csv(movie_data)
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)  # creating a dash object
 
 app.title = "Virtual Interface Bank of Emotions"  # the title of the application
@@ -132,13 +131,12 @@ def update_graph(values):
 def make_movie_request(n_clicks, movie_name):
     list_movie = []
     if movie_name is None:
-        print("It's empty")
+
         raise PreventUpdate
 
-    print(movie_name, n_clicks)
     list_movie.append(movie_name.lower())
     return list_movie
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0', port=8080, debug=True)
