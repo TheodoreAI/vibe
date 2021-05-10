@@ -21,7 +21,7 @@ external_stylesheets = [
 movie_data = os.path.join('movie_data.csv')
 data = pd.read_csv(movie_data)
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)  # creating a dash object
-
+server = app.server
 app.title = "Virtual Interface Bank of Emotions"  # the title of the application
 
 # The allowed input tupes are set by this tupple
@@ -139,4 +139,4 @@ def make_movie_request(n_clicks, movie_name):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8080, debug=True)
+    app.run_server()
