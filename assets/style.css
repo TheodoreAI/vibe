@@ -7,8 +7,24 @@
     display: flex;
     justify-content: center;
     font-weight: bold;
+    align-content: center;
 
 }
+
+
+
+
+/*aligning*/
+
+.container{
+    border: 3px solid #fff;
+    padding: 20px;
+}
+
+
+
+
+
 
 
 /* The input header above the Input field. */
@@ -50,4 +66,9 @@
 /* The hover functionality for the submit button. */
 .button-input:hover{
     background-color: #11557C;
+}
+
+.example_dropdown{
+    text-align: center;
+    position: right;
 }
