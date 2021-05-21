@@ -12,7 +12,7 @@ import os
 # from flask_restful import Resource, Api
 from imdb import IMDb
 import wikipedia
-
+from flask import jsonify
 from collections import defaultdict
 from csv import writer
 import pandas as pd
@@ -30,9 +30,6 @@ external_stylesheets = [
 # Get the data from the new csv files after the analysis
 movie_data = os.path.join('movie_data.csv')
 data = pd.read_csv(movie_data)
-# df = data.loc[data['title']]
-# print(df.to_dict()['title'].values())
-
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)  # creating a dash object
 server = app.server
@@ -83,24 +80,39 @@ app.layout = html.Div(
         ]),
 
         html.Div(
+
             children=[
-                dcc.Dropdown(
-                    id='my_dropdown',
-                    options=[
+                html.Label([
+                    "Example Movies Analyzed:           ",
+                    dcc.Dropdown(
+                        id='my_dropdown',
+                        options=[
 
-                        {'value': sent, 'label': sent} for sent in
-                        ["Terminator 2: Judgement Day", "Iron Man", "Up", "Interstellar", "Por mis pistolas",
-                         "Saw", "The Dark Knight Rises"]
+                            {'value': sent, 'label': sent} for sent in
+                            ["Terminator 2: Judgement Day", "Iron Man", "Up", "Interstellar", "Por mis pistolas",
+                             "Saw", "The Dark Knight Rises"]
 
-                    ],
-                    value="Terminator 2: Judgement Day",
-                    multi=False,
-                    clearable=False,
-                    style={"width": "50%"},
-                    className="dropdown-menu"
-                ),
+                        ],
+                        value="Terminator 2: Judgement Day",
+                        multi=False,
+                        clearable=False,
+                        style={"width": "50%"},
 
-            ], className="dropdown-menu"),
+                    )], className="dropdown-menu")
+                ,
+                html.Br(),
+
+                html.Label([
+                    "Movies you choose: ",
+                    dcc.Dropdown(
+
+                        id='user_dropdown',
+                        style={"width": "50%"},
+
+                    )], className="dropdown-menu")
+
+            ],
+        ),
 
     ])
 
@@ -154,20 +166,20 @@ def make_movie_request(n_clicks, movie_name):
     # passing the movie query to the get_movies() function
     get_movies(list_movie)
 
-
     # this
     return list_movie
 
 
-# @app.callback(
-#     [Output('user_dropdown', "children")],
-#     [Input('submit_movie_name', 'n_clicks')],
-#     [State('my-input-movie', 'value')]
-# )
-# def dropdown_options(n_clicks, movie_name):
-#     print(movie_name)
-#     return movie_name
-#
+@app.callback(
+    [Output(component_id='user_dropdown', component_property="options")],
+    [Input(component_id='my_dropdown', component_property='options')],
+
+)
+def dropdown_options(movie_name):
+    titles = pd.read_csv(movie_data, usecols=['title'])
+    movie_titles_options = titles.title.tolist()
+    return [{'label': i, 'value': i} for i in movie_titles_options]
+
 
 def get_movies(movie_list):
     """This function gets the movie plot and passes plot and title on a list."""
@@ -198,8 +210,6 @@ def pass_title_plot_sentiment(plot_title_arr):
         values_list = [vals for vals in dict_output.values()]
         csv_writer = writer(movie_data_csv)
         csv_writer.writerow(values_list)
-
-
 
 
 if __name__ == '__main__':
