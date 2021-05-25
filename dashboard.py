@@ -19,6 +19,7 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from flask import abort
 import requests
+nltk.download('vader_lexicon')
 
 # Getting the style.css for formatting the html elements from the assets directory:
 external_stylesheets = [
