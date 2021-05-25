@@ -4,3 +4,13 @@ venv
 .env
 app.yaml
 .gcloudignore
+source
+test_dashboard.py
+.idea/.gitignore
+.idea/inspectionProfiles/
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/sentiment.iml
+.idea/vcs.xml
+
