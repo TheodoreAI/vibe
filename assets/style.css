@@ -24,7 +24,14 @@
 
 
 
+h3{
+    text-align: center;
+    color: dodgerblue;
+    border: solid;
+    height: auto;
 
+
+}
 
 
 /* The input header above the Input field. */
