@@ -12,6 +12,31 @@
 }
 
 
+.tab-styles{
+    height: 44px;
+    align-items: center;
+}
+.tab-style{
+    border-bottom: 1px solid #d6d6d6;
+    padding: 6px;
+    font-weight: bold;
+    border-radius: 15px;
+    background-color: #F2F2F2;
+    box-shadow: 4px 4px 4px 4px lightgrey;
+    height: 40px;
+    font-size: large;
+}
+.tab-selected-style{
+    border-top: 1px solid #d6d6d6;
+    border-bottom: 1px solid #d6d6d6;
+    background-color: #119DFF;
+    color: white;
+    padding: 6px;
+    border-radius: 15px;
+    height: 40px;
+    font-weight: bold;
+    font-size: large;
+}
 
 
 /*aligning*/
@@ -21,18 +46,28 @@
     padding: 20px;
 }
 
-
+#description-text{
+    text-align: center;
+    font-weight: bold;
+}
 
 
 h3{
     text-align: center;
-    color: dodgerblue;
-    border: solid;
+    color: black;
+    border: solid dodgerblue;
     height: auto;
-
-
 }
 
+
+P{
+    text-align: center;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px solid dodgerblue;
+
+}
 
 /* The input header above the Input field. */
 .Input-header-div{
@@ -40,6 +75,7 @@ h3{
     color: black;
     text-align: center;
     font-weight: bold;
+    border-radius: 10px;
 
 }
 
@@ -49,6 +85,8 @@ h3{
     padding: 15px 32px;
     font-weight: bold;
     font-size: large;
+    border-radius: 10px;
+    height: auto;
 }
 
 /* The header title attributes. */
@@ -66,6 +104,8 @@ h3{
     text-align: center;
     padding: 15px 32px;
     font-weight: bold;
+    height: auto;
+
 }
 
 
@@ -73,6 +113,8 @@ h3{
 /* The hover functionality for the submit button. */
 .button-input:hover{
     background-color: #11557C;
+    height: auto;
+
 }
 
 .example_dropdown{

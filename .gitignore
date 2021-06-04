@@ -14,3 +14,4 @@ test_dashboard.py
 .idea/sentiment.iml
 .idea/vcs.xml
 
+read.py
