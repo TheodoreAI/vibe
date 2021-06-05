@@ -17,11 +17,12 @@ from csv import writer
 import pandas as pd
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
-from flask import abort
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import requests
+from flask import request
 import pickle as pickle
+from flask import json as JSON
 
 nltk.download('vader_lexicon')
 
@@ -73,6 +74,21 @@ tab_selected_style = {
     'font-size': 'large'
 }
 
+style_user_graph = {
+
+    'borderTop': '1px solid #d6d6d6',
+    'borderBottom': '1px solid #d6d6d6',
+    'backgroundColor': 'smoker',
+    'color': 'white',
+    'padding': '6px',
+    'border-radius': '15px',
+    'height': 'auto',
+    'font-weight': 'bold',
+    'font-size': 'large',
+    'margin': '10px'
+
+}
+
 app.layout = html.Div(
 
     children=[
@@ -101,7 +117,6 @@ app.layout = html.Div(
                 html.Button('Submit', id="submit_movie_name", n_clicks=0, className="button-input"),
 
                 html.Div(id="my-output-movie")
-
             ],
 
             className="Input-header-div"),
@@ -109,8 +124,8 @@ app.layout = html.Div(
         html.Div([
             html.Div(children=[
                 dcc.Tabs(id='tabs-example', value='Tab-1', children=[
-                    dcc.Tab(label="Film title tab:", value='tab-1', style=tab_style, selected_style=tab_selected_style),
-                    dcc.Tab(label='Film plot tab:', value='tab-2', style=tab_style, selected_style=tab_selected_style)
+                    dcc.Tab(label="Title:", value='tab-1', style=tab_style, selected_style=tab_selected_style),
+                    dcc.Tab(label='Plot:', value='tab-2', style=tab_style, selected_style=tab_selected_style)
                 ], style=tabs_styles),
                 html.Div(id='tabs-example-content', children=html.Div([
                     html.H3('Tab-content 2')
@@ -118,24 +133,56 @@ app.layout = html.Div(
             ]),
             html.Br(),
             dcc.Graph(
-                id="user-graph"
+                id="user-graph",
+                className='graphs'
             ),
 
             html.Label([
-                "Movies you choose: ",
+                "Movies you choose: \t",
+                html.Br(),
                 dcc.Dropdown(
                     id='user-dropdown',
                     multi=False,
                     options=[],
                     value="",
                     style={"width": "50%"},
+
                 )], className="dropdown-menu"),
 
+        ]),
+        html.Br(),
+        html.Div(
+            children=[
+                html.H2(
+                    children="Enter any text you want analyzed: "
+                ),
+
+                dcc.Input(
+                    id="my-input-text",
+                    className="text-input",
+                    type='text',
+
+                ),
+                html.Button('Submit', id="submit_input_text", n_clicks=0, className="button-input"),
+
+                dcc.Graph(
+                    id="input_text_graph",
+                    className='graphs'
+                )
+            ],
+
+            className="Input-header-div"),
+
+        html.Div(children=[
+
+            html.H1('Examples of movies pre-analyzed:'),
             dcc.Graph(
-                id="the_graph"
+                id="the_graph",
+                className='graphs',
+
             ),
             html.Label([
-                "Example Movies Analyzed:",
+                "Example Movies Analyzed: ",
                 dcc.Dropdown(
                     id='my_dropdown',
                     options=[
@@ -151,7 +198,9 @@ app.layout = html.Div(
                     clearable=False,
                     style={"width": "50%"},
                 )], className="dropdown-menu"),
-        ]),
+
+        ], className='example-data')
+
     ])
 
 
@@ -251,7 +300,11 @@ def update_user_graph(user_dropdown_values):
             values_from_movie.append(single_movie_neu[0])
             values_from_movie.append(single_movie_pos[0])
         # Use `hole` to create a donut-like pie chart and giving them the right values based on the movie
-        fig = go.Figure(data=[go.Pie(labels=labels, values=values_from_movie, hole=.3)])
+        fig = go.Figure(data=[go.Pie(labels=labels, values=values_from_movie, hole=.3)], layout={
+            'title': 'Sentiment Analysis with Polarity Scores',
+
+        })
+
         return fig
 
 
@@ -362,7 +415,6 @@ def pass_title_plot_sentiment(plot_title_arr):
 
     #     doing a rudimentary analysis
     filtered_plot = remove_stopwords(plot_title_arr[0])
-    print(filtered_plot)
     sia = SentimentIntensityAnalyzer()
     dict_output = sia.polarity_scores(filtered_plot)
 
@@ -372,3 +424,24 @@ def pass_title_plot_sentiment(plot_title_arr):
         values_list = [vals for vals in dict_output.values()]
         csv_writer = writer(md_user_csv)
         csv_writer.writerow(values_list)
+
+
+@app.callback(
+    Output(component_id='input_text_graph', component_property="figure"),
+    [Input(component_id='submit_input_text', component_property='n_clicks')],
+    [State('my-input-text', 'value')]
+
+)
+def analyze_any_text(clicks_n, input_text):
+    """This function is used to test the API I built in the main.py file.
+    It sends a json object and I should get """
+    if input_text is None:
+        raise PreventUpdate
+    else:
+        filtered_text = remove_stopwords(input_text)
+        sia = SentimentIntensityAnalyzer()
+        dict_out = sia.polarity_scores(filtered_text)
+        values_from_text = [dict_out['neg'], dict_out['neu'], dict_out['pos']]
+        labels = ['neg', 'neu', 'pos']
+        fig = go.Figure(data=[go.Pie(labels=labels, values=values_from_text, hole=.3)])
+        return fig
