@@ -25,7 +25,7 @@ import pickle as pickle
 from flask import json as JSON
 
 nltk.download('vader_lexicon')
-
+nltk.download('stopwords')
 # Getting the style.css for formatting the html elements from the assets directory:
 external_stylesheets = [
     {
