@@ -28,7 +28,7 @@ from nltk.tokenize import word_tokenize
 import requests
 from flask import request
 import pickle as pickle
-from flask import json as JSON
+import json
 
 nltk.download('vader_lexicon')
 nltk.download('stopwords')
@@ -446,10 +446,13 @@ def analyze_any_text(clicks_n, input_text):
     if input_text is None:
         raise PreventUpdate
     else:
-        filtered_text = remove_stopwords(input_text)
-        sia = SentimentIntensityAnalyzer()
-        dict_out = sia.polarity_scores(filtered_text)
-        values_from_text = [dict_out['neg'], dict_out['neu'], dict_out['pos']]
+        response = requests.post(
+            url='https://vibe-api-service.herokuapp.com/post-requests',
+            json={'title': 'hello', 'input_text': input_text},
+
+        )
+        dict_obj = json.loads(response.text)
+        values_from_text = [dict_obj["neg"], dict_obj["neu"], dict_obj["pos"]]
         labels = ['neg', 'neu', 'pos']
         fig = go.Figure(data=[go.Pie(labels=labels, values=values_from_text, hole=.3)])
         return fig
