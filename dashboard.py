@@ -1,5 +1,11 @@
-# The outline for this code is from: https://realpython.com/python-dash/
-# I'm using a wikipedia module content scrapper to seach movies using titles: https://en.wikipedia.org/w/api.php?format=xml&action=query&list=embeddedin&%22%20+%20%20%20%20%20%20%20%20%20%22einamespace=0&eilimit=500&eititle=Template:Infobox%20film
+# Mateo Estrada Jorge
+# Software Engineering I
+# Oregon State University
+# Spring 2021
+
+# I learned some techniques about Dash through: https://realpython.com/python-dash/
+# I'm using a wikipedia module content scrapper to search movies using titles: https://en.wikipedia.org/w/api.php?format=xml&action=query&list=embeddedin&%22%20+%20%20%20%20%20%20%20%20%20%22einamespace=0&eilimit=500&eititle=Template:Infobox%20film
+# This project was inspired by this tutorial: https://realpython.com/nltk-nlp-python/
 import dash
 import flask
 import dash_core_components as dcc
